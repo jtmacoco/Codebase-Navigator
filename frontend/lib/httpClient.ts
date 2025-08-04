@@ -1,3 +1,4 @@
+import { API_BASE_URL } from "@/constants/endpoints";
 /*
 * Description:
     * Centralized fetch wrapper
@@ -17,9 +18,10 @@ async function request<T>(url: string, options: RequestInit): Promise<T> {
             ...options,
             headers: {
                 ...(is_Get || is_Delete ? {} : { 'Content-type': "application/json" }),
-                ...(options.headers || {})
+                ...(options.headers || {}),
             }
         });
+        console.log(res);
         return (res.json());
     }
     catch (error) {
