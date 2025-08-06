@@ -4,6 +4,7 @@ from tree_sitter import Language, Parser
 from pathlib import Path
 from tree_sitter_language_pack import get_language, get_parser
 from constants.languages import LANGUAGES
+from embeddings.embedder import embed
 import tempfile
 import subprocess
 class CodebaseService:
@@ -48,11 +49,14 @@ class CodebaseService:
                     with open(file_path,'r',encoding='utf-8') as f:
                         content = f.read()
                         functions = self.get_functions(content,parser)
-                        #for func_node in functions:
-                            #func_code = content.encode('utf-8')[func_node.start_byte:func_node.end_byte].decode('utf-8')
+                        for func_node in functions:
+                            func_code = content.encode('utf-8')[func_node.start_byte:func_node.end_byte].decode('utf-8')
+                            result = embed(code_chunks=func_code)
+                            #print("Embed result type:",type(result))
                             #print("\n--- Function ---")
                             #print(func_code)
                         tree = parser.parse(bytes(content,'utf8'))
+                        print(f"Parsed {file_path} successfully")
                 except Exception as e:
                     print(f"ERROR READING {file_path}:{e}")
     
@@ -63,7 +67,6 @@ class CodebaseService:
         - ssh_url (String): ssh url
         - repo_name (String): repo name
     '''
-
     def clone_repo(self,ssh_url: str, repo_name:str):
         with tempfile.TemporaryDirectory() as tmpdir:
             try:
