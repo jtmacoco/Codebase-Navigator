@@ -17,4 +17,4 @@ def embed(code_chunks:str):
     with torch.no_grad():
         output = model(**inputs)
         cls_embedding = output.last_hidden_state[:,0,:]
-        return cls_embedding.squeeze().tolist()
+        return cls_embedding.squeeze()

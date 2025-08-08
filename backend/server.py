@@ -1,10 +1,15 @@
 from fastapi import FastAPI
 from routers import codebase
 from fastapi.middleware.cors import CORSMiddleware
+from services.codebase_service import CodebaseService
+from controllers.codebase_ctrl import CodebaseController
+from routers.codebase import codebase_router
 import uvicorn
+
 origins = [
     "http://localhost:3000"
 ]
+
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
@@ -13,7 +18,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-app.include_router(codebase.router)
+
+app.include_router(codebase_router())
 
 @app.get("/")
 async def read_root():
