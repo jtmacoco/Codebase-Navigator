@@ -23,3 +23,11 @@ if not pc.has_index(index_name):
 pinecone_index = pc.Index(index_name)
 def get_pinecone_index():
     return pinecone_index
+
+def pincone_upsert_vectors(name_space:str,vectors:list):
+    pinecone_index.upsert(
+        namespace=name_space,
+        vectors=vectors
+    )
+    print("SUCCESS UPSERT VECTORS")
+
