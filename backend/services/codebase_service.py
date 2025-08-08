@@ -7,7 +7,6 @@ from constants.languages import LANGUAGES
 from embeddings.embedder import embed
 import tempfile
 import subprocess
-import faiss
 class CodebaseService:
     def __init__(self,index):
         self.index = index
@@ -55,13 +54,6 @@ class CodebaseService:
                         for func_node in functions:
                             func_code = content.encode('utf-8')[func_node.start_byte:func_node.end_byte].decode('utf-8')
                             result = embed(code_chunks=func_code)
-                            #print(result.shape)
-                            index = faiss.IndexFlatL2(result.shape[-1])
-                            index.add(result.unsqueeze(0).numpy())
-                            #print(index.is_trained)
-                            #print("Embed result type:",type(result))
-                            #print("\n--- Function ---")
-                            #print(func_code)
                         tree = parser.parse(bytes(content,'utf8'))
                         print(f"Parsed {file_path} successfully")
                 except Exception as e:
