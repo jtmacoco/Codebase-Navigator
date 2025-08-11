@@ -80,10 +80,11 @@ class CodebaseService:
                             vec_id_counter+=1
                         
                         tree = parser.parse(bytes(content,'utf8'))
-                        print(f"Parsed {file_path} successfully")
+                        #print(f"Parsed {file_path} successfully")
                 except Exception as e:
                     print(f"ERROR READING {file_path}:{e}")
-        pincone_upsert_vectors(name_space=repo_name,vectors=vectors)
+        #uncomment when doing more testing for backend, so don't use up all free tier
+        #pincone_upsert_vectors(name_space=repo_name,vectors=vectors)
          
     '''
     - Description:
