@@ -2,9 +2,7 @@
 import { useRef } from "react";
 import Form from 'next/form'
 import ChatInput from "./components/chatInput";
-import { IoMdSend } from "react-icons/io";
 export default function chatBot() {
-    const textareaRef = useRef<HTMLTextAreaElement>(null);
     return (
         <>
             <div className='bg-zinc-800 bg-full h-screen w-screen '>
