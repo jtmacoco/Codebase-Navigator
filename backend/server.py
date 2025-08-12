@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from services.codebase_service import CodebaseService
 from controllers.codebase_ctrl import CodebaseController
 from routers.codebase import codebase_router
+from routers.chat import chat_router
 import uvicorn
 
 origins = [
@@ -20,6 +21,7 @@ app.add_middleware(
 )
 
 app.include_router(codebase_router())
+app.include_router(chat_router())
 
 @app.get("/")
 async def read_root():
