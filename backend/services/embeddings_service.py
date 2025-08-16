@@ -44,6 +44,7 @@ def upsert_batch(all_embeddings:list,chunk_metadata:list,repo_name:str, code_dat
             "metadata":meta
         })
         chunk_code_data.append({"_id":idx,"code":code})
+    '''
     #UNCOMMENT WHEN WANT TO ACTUALLY EMBED, TRYING NOT TO WASTE FREE TIER LOL
     def insert_chunks():
         for i in range(0,len(chunk_code_data),batch_size):
@@ -54,6 +55,7 @@ def upsert_batch(all_embeddings:list,chunk_metadata:list,repo_name:str, code_dat
     with ThreadPoolExecutor() as executor:
         executor.submit(insert_chunks)
         executor.submit(upsert_vectors)
+    '''
 
 '''
 Prepares code chunks and embeds code chunks in batches
