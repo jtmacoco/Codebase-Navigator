@@ -1,14 +1,14 @@
 import { API_BASE_URL } from "@/constants/endpoints";
 /*
-* Description:
-    * Centralized fetch wrapper
-* 
-* Args:
-    * url (string): Request URL
-    * options (RequestInit): Fetch options (method, headers, etc.
+* Centralized fetch wrapper 
 *
-* Returns:
-    * Promise<T>: JSON response
+* @typeParam T - The expected reponse type 
+* 
+* @param url - Request URL
+* @param options - Feth options (method, headers, etc)
+* 
+* @returns A promise resolving to the parsed JSON
+* 
 */
 async function request<T>(url: string, options: RequestInit): Promise<T> {
     try {

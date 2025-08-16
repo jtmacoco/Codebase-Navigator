@@ -3,13 +3,13 @@ import sendGitUrl from "../../services/codebaseService";
 import GitResponsse from "@/types/gitResponse";
 
 /*
-* Description: Github URL submission hook
+* A custom hook for submitting a Github repo URL
 *
+* @returns  An object containing
+* - `handleSubmit`: Function to send the Github URL and return the parsed response
+* - `error`: Error message if submission fails, otherwise `null`
+* - `isLoading`: Boolean indicating whether a submission is in progress
 * 
-* Returns :
-    * handleSubmit: Submission Function
-    * error (String): Error Messages
-    * isLoading (Boolean): Inidcates Loading State
 */
 export function useSubmitGitUrl() {
     const [error, setError] = useState<string | null>(null);
