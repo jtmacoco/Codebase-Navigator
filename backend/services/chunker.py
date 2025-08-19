@@ -3,27 +3,84 @@ from collections import defaultdict
 Split function code into smaller chunks based on byte size
 
 Args:
-    functions (dict): A dictionary containing the function names to their code
-    max_bytes (int, optional): Max size in bytes for each chunk. Default value 30,000
+    methods (dict): A dict mapping function names to their metadata
+    max_bytes (int, optional): Max size in bytes for each chunk
 
 Returns:
-    dict[str,list[str]]: Dic mapping functions names to list of code chunks
+    list[dict]: A list of dict's containing code data
 ''' 
-def chunk_code(functions:dict,max_bytes=30_000):
-    chunks = defaultdict(list)
-    for name, code in functions.items():
+def chunk_code(methods:dict, max_bytes=15_000_000):
+    chunks_with_meta = []
+    for name, data in methods.items():
+        code = data['code']
+        func_type = data.get('type')
         current_chunk = []
         current_size = 0
-        chunk_id = 0
+        chunk_index = 0
+        for line in code.splitlines(keepends=True):
+            line_bytes = len(line.encode('utf-8'))
+            if current_size + line_bytes > max_bytes:
+                chunks_with_meta.append({
+                    "function_name":name,
+                    "chunk_index":chunk_index,
+                    "type":func_type,
+                    "code": "".join(current_chunk),
+                    "file": data['file']
+                })
+                current_chunk = [line]
+                current_size = line_bytes
+                chunk_index+=1
+            else:
+                current_chunk.append(line)
+                current_size+=line_bytes
+        if current_chunk:
+            chunks_with_meta.append({
+                    "function_name":name,
+                    "chunk_index":chunk_index,
+                    "type":func_type,
+                    "code": "".join(current_chunk),
+                    "file": data['file']
+                })
+    return chunks_with_meta
+
+'''
+Chunks an entire file based on number of bytes
+
+Args:
+    file (dict): A dict containing the content of the file
+    max_bytes (int,optional): The max number of bytes before chunking
+
+Returns
+    list[dict]: A list of dict's containing code data
+'''
+def chunk_file(file:dict, max_bytes=4_000_000):
+    chunks_with_meta = []
+    for name, code in file.items():
+        current_chunk = []
+        current_size = 0
+        chunk_index = 0
         for line in code.splitlines(keepends=True):
             line_bytes = (len(line.encode('utf-8')))
             if current_size + line_bytes > max_bytes:
-                chunks[name].append("".join(current_chunk))
+                chunks_with_meta.append({
+                    "function_name":"N/A",
+                    "chunk_index":chunk_index,
+                    "type": "This is the entire file:{name}",
+                    "code": "".join(current_chunk),
+                    "file": name,
+                })
                 current_chunk = [line]
                 current_size = line_bytes
+                chunk_index+=1
             else:
                 current_chunk.append(line)
                 current_size += line_bytes
         if current_chunk:
-            chunks[name].append("".join(current_chunk))
-    return chunks
+            chunks_with_meta.append({
+                    "function_name":"N/A",
+                    "chunk_index":chunk_index,
+                    "type": "file",
+                    "code": "".join(current_chunk),
+                    "file": name,
+                })
+    return chunks_with_meta

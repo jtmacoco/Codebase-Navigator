@@ -1,8 +1,9 @@
-"use client"
-import { useRef } from "react";
-import Form from 'next/form'
-import ChatInput from "./components/chatInput";
-export default function chatBot() {
+import ChatInput from "../components/chatInput"
+interface PageProps{
+    params: {repo_name:string}
+}
+export default async function chatBot({params}:PageProps) {
+    const {repo_name} = await params;
     return (
         <>
             <div className='bg-zinc-800 bg-full h-screen w-screen '>
@@ -11,7 +12,7 @@ export default function chatBot() {
                     <p className="text-zinc-500 text-sm">Ask your first question to get started.</p>
                 </div>
                 <div className="bg-zinc-900 fixed bottom-0 left-0 w-full  p-4">
-                    <ChatInput />
+                    <ChatInput repo_name={repo_name}/>
                 </div>
             </div>
         </>

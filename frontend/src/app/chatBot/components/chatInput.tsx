@@ -5,12 +5,16 @@ import { Button, ButtonGroup } from "@heroui/button";
 import Form from "next/form";
 import { IoMdSend } from "react-icons/io";
 import sendMessage from '../../../../services/chatService';
-
-export default function ChatInput() {
+interface InputProp{
+    repo_name:string;
+}
+export default function ChatInput({repo_name}:InputProp) {
     const [message,setMessage] = useState("")
+    console.log("test",repo_name)
     const handleSubmit = (e:React.FormEvent,message:string)=>{
         e.preventDefault();
-        sendMessage({message:message});
+        sendMessage({message:message,repo_name:repo_name});
+        setMessage("")
     }
     return (
         <>
@@ -19,6 +23,7 @@ export default function ChatInput() {
                     <div className="relative mx-auto">
                         <Textarea
                             minRows={3}
+                            value={message}
                             onChange={(e)=>{setMessage(e.target.value)}}
                             classNames={{
                                 base: "p-2 w-150",

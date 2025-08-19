@@ -12,8 +12,9 @@ export default function Home() {
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const res = await handleSubmit(url);
+    const repo_name = res?.repo_name;
     if (res) {
-      router.push('/chatBot')
+      router.push(`chatBot/${repo_name}`);
     }
   };
 

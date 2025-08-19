@@ -32,7 +32,7 @@ Returns:
     None
 
 '''
-def upsert_batch(all_embeddings:list,chunk_metadata:list,repo_name:str, code_data:list, batch_size=32):
+def upsert_batch(all_embeddings:list,chunk_metadata:list,repo_name:str, code_data:list,index, batch_size=32):
     vectors_to_upsert = []
     futures = []
     chunk_code_data = []
@@ -44,19 +44,22 @@ def upsert_batch(all_embeddings:list,chunk_metadata:list,repo_name:str, code_dat
             "metadata":meta
         })
         chunk_code_data.append({"_id":idx,"code":code})
-    '''
     #UNCOMMENT WHEN WANT TO ACTUALLY EMBED, TRYING NOT TO WASTE FREE TIER LOL
+    '''
     def insert_chunks():
         for i in range(0,len(chunk_code_data),batch_size):
             insert_many(chunk_code_data[i:i+batch_size])
     def upsert_vectors(): 
         for i in range(0,len(vectors_to_upsert),batch_size):
-            pincone_upsert_vectors(name_space=repo_name,vectors=vectors_to_upsert[i:i+batch_size])
+            pincone_upsert_vectors(name_space=repo_name,vectors=vectors_to_upsert[i:i+batch_size],index=index)
     with ThreadPoolExecutor() as executor:
-        executor.submit(insert_chunks)
+        futures = [
+        executor.submit(insert_chunks),
         executor.submit(upsert_vectors)
+        ]
+        for f in futures:
+            f.result()
     '''
-
 '''
 Prepares code chunks and embeds code chunks in batches
 
@@ -68,27 +71,19 @@ Returns:
     None
 
 '''
-def embed_chunks_batching(chunks:list,repo_name:str):
-    all_chunks = []
-    chunk_metadata = []
-    code_data = []
-    for func_name, chunk_list in chunks.items():
-        for idx, chunk_text in enumerate(chunk_list):
-            all_chunks.append(chunk_text)
-            chunk_metadata.append({
-                "function_name":func_name,
-                "chunk_index":idx,
-            })
-            code_data.append(chunk_text)
-    
-    all_embeddings = embed(all_chunks)
-    '''
-    use for comparing parallel to non-parallel
-    all_embeddings = []
-    batches = [all_chunks[i:i+batch_size] for i in range(0,len(all_chunks),batch_size) if all_chunks[i:i+batch_size]]
-    all_embeddings=[embed(batch) for batch in batches]
-    all_embeddings=torch.cat(all_embeddings,dim=0)
-    all_embeddings=all_embeddings.tolist()
-    '''
-    upsert_batch(all_embeddings,chunk_metadata,repo_name,code_data)
+def embed_chunks_batching(chunks_with_meta:dict,repo_name:str,index=1):
+    all_chunks = [f"File: {str(c["file"])}\n\n type:{c["type"]}\n\n ---\n\n"+c["code"] for c in chunks_with_meta]
+    metadata = [
+        {
+            "repo": repo_name,
+            "function_name": c["function_name"],
+            "chunk_index": c["chunk_index"],
+            "type":c["type"],
+            "file":str(c["file"])
+        }
+        for c in chunks_with_meta
+    ]
+    code_data = all_chunks[:]
+    all_embeddings=embed(all_chunks)
+    upsert_batch(all_embeddings,metadata,repo_name,code_data,index)
         

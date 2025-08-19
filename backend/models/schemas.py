@@ -6,3 +6,4 @@ class GitRepoReq(BaseModel):
 
 class ChatReq(BaseModel):
     message:str
+    repo_name:str
