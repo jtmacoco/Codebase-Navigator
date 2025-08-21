@@ -29,7 +29,7 @@ export default function Home() {
               className='rounded mx-5 bg-zinc-700 p-2 w-120'
               placeholder="type github url"
               name="query" />
-            <button className='bg-zinc-700 p-2 rounded-xl onhover:bg-red-500' type="submit" disabled={isLoading}>
+            <button className='bg-zinc-700 p-2 rounded-xl hover:bg-zinc-600' type="submit" disabled={isLoading}>
               {isLoading ? 'Loading...' : (<IoMdSend />)}
             </button>
           </form>
