@@ -6,6 +6,6 @@ class ChatService:
         self.index = index
         self.pipeline = RAGPipeline()
     def process_message(self,payload:ChatReq):
-        test = self.pipeline.query(payload.message,payload.repo_name)
+        response = self.pipeline.query(payload.message,payload.repo_name)
         #print(payload.message,payload.repo_name)
-        return {"message":payload.message} 
+        return {"response":response}

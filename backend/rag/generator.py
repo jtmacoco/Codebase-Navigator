@@ -48,7 +48,6 @@ class Generator:
         with torch.inference_mode():
             outputs = self.model.generate(**inputs, max_new_tokens=512,use_cache=True,stopping_criteria=stopping)
         response = (self.tokenizer.decode(outputs[0][inputs["input_ids"].shape[-1]:]))
-        print(response)
-        return response
+        return response[:-10]
         
 

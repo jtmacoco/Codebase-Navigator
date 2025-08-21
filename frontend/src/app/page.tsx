@@ -1,8 +1,6 @@
 "use client"
-import Form from 'next/form'
 import { useState } from 'react';
 import { useSubmitGitUrl } from '@/hooks/useSubmitGitUrl';
-import Link from 'next/link'
 import { useRouter } from 'next/navigation';
 export default function Home() {
   const [url, setUrl] = useState('');
