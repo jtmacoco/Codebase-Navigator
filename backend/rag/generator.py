@@ -30,11 +30,11 @@ class Generator:
         ]
         for data in data_chunks_fine:
             messages.append({"role":"assistant",
-            "content":f"file_name:{data['file']}\n\n method type: {data['type']}\n\n code:{data['code']}"
+            "content":f"file_path:{data['file_path']}\n\nfile_name:{data['file']}\n\n method type: {data['type']}\n\n code:{data['code']}"
             })
         for data in data_chunks_medium:
             messages.append({"role":"assistant",
-            "content":f"file_name:{data['file']}\n\n method type: {data['type']}\n\n code:{data['code']}"
+            "content":f"file_path:{data['file_path']}\n\nfile_name:{data['file']}\n\n method type: {data['type']}\n\n code:{data['code']}"
             })
         messages.append({"role":"user","content":user_query})
         inputs = self.tokenizer.apply_chat_template(

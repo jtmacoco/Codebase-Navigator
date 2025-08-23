@@ -28,6 +28,7 @@ class Retriever:
                 "type":match['metadata']['type'],
                 "repo":match['metadata']['repo'],
                 "code":get_code_chunk(idx)['code'],
+                "file_path":match['metadata']['file_path'],
             })
 
         data_medium = []
@@ -39,5 +40,6 @@ class Retriever:
                 "type":match['metadata']['type'],
                 "repo":match['metadata']['repo'],
                 "code":get_code_chunk(idx)['code'],
+                "file_path":match['metadata']['file_path'],
             })
         return {"fine":data_fine,"medium":data_medium}
