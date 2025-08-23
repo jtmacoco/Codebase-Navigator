@@ -12,7 +12,7 @@
 - Vector DB: Pinecone
 - Embedding: Hugginface
 
-## Instilation 
+## Installation 
 
 1. Clone Repo
 ```bash
