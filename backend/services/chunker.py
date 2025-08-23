@@ -25,7 +25,8 @@ def chunk_code(methods:dict, max_bytes=15_000_000):
                     "chunk_index":chunk_index,
                     "type":func_type,
                     "code": "".join(current_chunk),
-                    "file": data['file']
+                    "file": data['file'],
+                    "file_path":data['file_path']
                 })
                 current_chunk = [line]
                 current_size = line_bytes
@@ -39,7 +40,8 @@ def chunk_code(methods:dict, max_bytes=15_000_000):
                     "chunk_index":chunk_index,
                     "type":func_type,
                     "code": "".join(current_chunk),
-                    "file": data['file']
+                    "file": data['file'],
+                    "file_path":data['file_path']
                 })
     return chunks_with_meta
 
@@ -55,7 +57,8 @@ Returns
 '''
 def chunk_file(file:dict, max_bytes=4_000_000):
     chunks_with_meta = []
-    for name, code in file.items():
+    for name, data in file.items():
+        code = data['code']
         current_chunk = []
         current_size = 0
         chunk_index = 0
@@ -68,6 +71,7 @@ def chunk_file(file:dict, max_bytes=4_000_000):
                     "type": "This is the entire file:{name}",
                     "code": "".join(current_chunk),
                     "file": name,
+                    "file_path":data['file_path'],
                 })
                 current_chunk = [line]
                 current_size = line_bytes
@@ -82,5 +86,6 @@ def chunk_file(file:dict, max_bytes=4_000_000):
                     "type": "file",
                     "code": "".join(current_chunk),
                     "file": name,
+                    "file_path":data['file_path'],
                 })
     return chunks_with_meta

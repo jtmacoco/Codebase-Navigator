@@ -95,10 +95,12 @@ def get_all_methods(file_path:str):
                     method_code = content.encode('utf-8')[method_node["node"].start_byte:method_node["node"].end_byte].decode('utf-8')
                     method_name = str(method_node["name"])
                     #all_methods[method_name] = str(method_code)
+                    rel_path = str(file_path.relative_to(path))
                     all_methods[method_name] = {
                         "code":method_code,
                         "type":method_node["node"].type,
-                        "file":file_path.name
+                        "file":file_path.name,
+                        "file_path":f"./{rel_path}"
                     }
                 tree = parser.parse(bytes(content,'utf8'))
             except Exception as e:
@@ -114,10 +116,13 @@ def get_all_code(file_path:str):
             if should_ignore(file_path):
                 continue
             try:
-                rel_path = file_path.relative_to(path)
+                rel_path = str(file_path.relative_to(path))
                 with open(file_path,'r',encoding='utf-8') as f:
                     content = f.read()
-                    file_code[str(file_path.name)]=str(content)
+                    file_code[str(file_path.name)]={
+                        "code":str(content),
+                        "file_path":f"./{rel_path}",
+                        }
             except UnicodeDecodeError:
                 pass
             except Exception as e:

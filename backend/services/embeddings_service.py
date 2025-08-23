@@ -79,7 +79,8 @@ def embed_chunks_batching(chunks_with_meta:dict,repo_name:str,index=1):
             "function_name": c["function_name"],
             "chunk_index": c["chunk_index"],
             "type":c["type"],
-            "file":str(c["file"])
+            "file":str(c["file"]),
+            "file_path":c["file_path"],
         }
         for c in chunks_with_meta
     ]
