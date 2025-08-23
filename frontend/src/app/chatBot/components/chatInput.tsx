@@ -1,7 +1,6 @@
 "use client"
 import { useState } from 'react';
 import { Textarea } from "@heroui/input";
-import ChatResponse from '@/types/chatResponse';
 import { IoMdSend } from "react-icons/io";
 import sendMessage from '../../../../services/chatService';
 import { useChat } from '@/contexts/chatContext';
@@ -11,7 +10,7 @@ interface InputProp {
 }
 export default function ChatInput({ repo_name }: InputProp) {
     const [message, setMessage] = useState("");
-    const [error, setError] = useState("");
+    const [error, setError] = useState<{id:number;message:string}|null>(null);
     const { addMessage } = useChat();
 
     const handleSubmit = async (e: React.FormEvent, message: string) => {
@@ -26,12 +25,12 @@ export default function ChatInput({ repo_name }: InputProp) {
         }
         catch (error) {
             if (error instanceof Error)
-                setError(error.message);
+                setError({id:Date.now(),message:error.message});
         }
     }
     return (
         <>
-            {error && <ErrorMessages message={error} />}
+            {error && <ErrorMessages key={error.id} message={error.message} />}
             <div className='relative flex flex-col w-full flex-grow p-4 '>
                 <form action="/search" className="relative flex" onSubmit={(e) => { handleSubmit(e, message) }}>
                     <div className="relative mx-auto">

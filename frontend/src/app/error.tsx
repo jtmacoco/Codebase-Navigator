@@ -8,8 +8,10 @@ export default function ErrorMessages({ message }: ErrorMessage) {
         const timer = setTimeout(() => {
             setVisible(false);
         }, 5000);
+        console.log(visible)
+        
         return () => clearTimeout(timer)
-    }, [])
+    }, [message])
     if (!visible) return null;
     return (
         <>
