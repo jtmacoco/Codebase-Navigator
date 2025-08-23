@@ -1,6 +1,7 @@
 from embeddings.pinecone_index import pinecone_retriever
 from mongo.mongodb_config import get_code_chunk
 from embeddings.embedder import embed
+from . import filterQuery
 class Retriever:
     '''
     Based on a user's query will retrieve the most relavent embedding vector along with it's
@@ -17,7 +18,7 @@ class Retriever:
     '''
     def retrieve(self,user_query:str,name_space:str):
         embeded_query = embed([user_query])
-        pine_res1,pine_res2 = pinecone_retriever(name_space,embeded_query[0])
+        pine_res1,pine_res2 = pinecone_retriever(name_space,embeded_query[0],user_query)
 
         data_fine = []
         for match in pine_res1['matches']:

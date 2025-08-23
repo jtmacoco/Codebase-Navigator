@@ -2,6 +2,7 @@ from dotenv import load_dotenv
 from pinecone import Pinecone, ServerlessSpec
 import os
 import json
+from rag.filterQuery import filter_query
 config = load_dotenv(dotenv_path="./.backend_env")
 
 pc1 = Pinecone(api_key=os.getenv("PINECONE"))
@@ -54,17 +55,20 @@ def pincone_upsert_vectors(name_space:str,vectors:list,index):
             vectors=vectors
         )
 
-def pinecone_retriever(namespace:str,user_query):
-    result_fine = pinecone_index_fine.query(
+def pinecone_retriever(namespace:str,embeded_query:list,user_query:str):
+    filter_parms = filter_query(user_query)
+    def query_index(index,apply_filter=False):
+        return index.query(
         namespace=namespace,
-        vector=user_query,
+        vector=embeded_query,
         top_k=2,
-        include_metadata=True
-    )
-    result_medium = pinecone_index_medium.query(
-        namespace=namespace,
-        vector=user_query,
-        top_k=2,
-        include_metadata=True
-    )
+        include_metadata=True,
+        filter=filter_parms if apply_filter else None
+        )
+    result_fine = query_index(pinecone_index_fine,apply_filter=True)
+    result_medium= query_index(pinecone_index_medium,apply_filter=True)
+    if not result_fine['matches']:
+        result_fine = query_index(pinecone_index_fine,apply_filter=False)
+    if not result_medium['matches']:
+        result_medium = query_index(pinecone_index_medium,apply_filter=False)
     return result_fine,result_medium
