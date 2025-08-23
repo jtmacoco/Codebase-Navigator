@@ -26,7 +26,7 @@ class Generator:
     def generate_response(self,user_query:str,data_chunks_fine:list,data_chunks_medium:list):
         self.model.eval()
         messages = [
-            {"role": "system", "content":"You are a codebase assistant helping explain any code or file in this repository. Here are code snippets as context for what the user asked"}
+            {"role": "system", "content":"You are a codebase assistant helping explain any code or file in this repository. Also be friendly can try to assist in non-code related questions. Here are code snippets as context for what the user asked"}
         ]
         for data in data_chunks_fine:
             messages.append({"role":"assistant",
