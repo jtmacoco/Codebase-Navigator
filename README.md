@@ -1,6 +1,7 @@
 # Codebase-Navigator
 > An AI web app that helps you explore, search, and understand github codebaes using a RAG pipeline
-
+## Example
+![Example](./example.gif)
 ## Features
 - Semantic search (dense vector search using Pinecone) across repositories 
 - RAG for context-aware Q&A about code
