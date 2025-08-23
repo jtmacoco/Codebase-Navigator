@@ -10,11 +10,13 @@ interface InputProp {
 }
 export default function ChatInput({ repo_name }: InputProp) {
     const [message, setMessage] = useState("");
-    const [error, setError] = useState<{id:number;message:string}|null>(null);
+    const [error, setError] = useState<{ id: number; message: string } | null>(null);
     const { addMessage } = useChat();
 
     const handleSubmit = async (e: React.FormEvent, message: string) => {
         e.preventDefault();
+        if (!message) return;
+
         addMessage({ role: "user", content: message });
         setMessage("");
         try {
@@ -25,7 +27,7 @@ export default function ChatInput({ repo_name }: InputProp) {
         }
         catch (error) {
             if (error instanceof Error)
-                setError({id:Date.now(),message:error.message});
+                setError({ id: Date.now(), message: error.message });
         }
     }
     return (
@@ -37,6 +39,12 @@ export default function ChatInput({ repo_name }: InputProp) {
                         <Textarea
                             minRows={3}
                             value={message}
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter" && !e.shiftKey) {
+                                    e.preventDefault();
+                                    handleSubmit(e as any, message);
+                                }
+                            }}
                             onChange={(e) => { setMessage(e.target.value) }}
                             classNames={{
                                 base: "p-2 w-150",
