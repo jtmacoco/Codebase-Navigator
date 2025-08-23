@@ -108,6 +108,15 @@ def get_all_methods(file_path:str):
     all_methods=filter_methods(all_methods)
     return all_methods
 
+'''
+Extracts all the code from a file
+
+Args:
+    file_path (str): Path to file to scan
+
+Returns:
+    dict[str,dict]: A dict mapping method names to their code 
+'''
 def get_all_code(file_path:str):
     path = Path(file_path)
     file_code = {}
