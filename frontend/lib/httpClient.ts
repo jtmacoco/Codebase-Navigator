@@ -21,8 +21,11 @@ async function request<T>(url: string, options: RequestInit): Promise<T> {
                 ...(options.headers || {}),
             }
         });
-        console.log(res);
-        return (res.json());
+        if(!res.ok){
+            const body = (await res.json()) as {detail?:string};
+            throw new Error(body.detail || "Something went wrong");
+        }
+        return (res.json() as Promise<T>);
     }
     catch (error) {
         if (error instanceof Error) {
@@ -34,15 +37,15 @@ async function request<T>(url: string, options: RequestInit): Promise<T> {
     }
 }
 const httpClient = {
-    get: <T>(url: string) => request(url, { method: 'GET' }),
-    post: <T>(url: string, body: any) => request(url, {
+    get: async <T>(url: string) => <T> request(url, { method: 'GET' }),
+    post: async <T>(url: string, body: any) => <T>request(url, {
         method: 'POST',
         body: JSON.stringify(body)
     }),
-    put: <T>(url: string, body: any) => request(url, {
+    put: async <T>(url: string, body: any) => <T> request(url, {
         method: 'PUT',
         body: JSON.stringify(body)
     }),
-    delete: <T>(url: string) => request(url, { method: 'DELETE' })
+    delete: async <T>(url: string) => <T> request(url, { method: 'DELETE' })
 };
 export default httpClient

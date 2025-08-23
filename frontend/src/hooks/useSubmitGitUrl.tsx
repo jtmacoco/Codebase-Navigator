@@ -14,20 +14,22 @@ import GitResponsse from "@/types/gitResponse";
 export function useSubmitGitUrl() {
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
-    const handleSubmit = async (url: string) => {
+    const [status,setStatus] = useState(null);
+    const handleSubmit = async (url: string): Promise<GitResponsse | undefined> => {
         setError(null);
         setIsLoading(true);
         try {
-            const res = await sendGitUrl({ github_url: url })as GitResponsse;
-            return res
+            const res = await sendGitUrl({ github_url: url });
+            return res;
         }
         catch (error) {
             if (error instanceof Error) {
                 setError(error.message);
             }
+            return undefined;
         } finally {
             setIsLoading(false);
         }
     };
-    return { handleSubmit, error, isLoading };
+    return { handleSubmit, error, isLoading,status };
 }

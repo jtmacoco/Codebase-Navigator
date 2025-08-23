@@ -3,9 +3,10 @@ import { useState } from 'react';
 import { useSubmitGitUrl } from '@/hooks/useSubmitGitUrl';
 import { useRouter } from 'next/navigation';
 import { IoMdSend } from "react-icons/io";
+import ErrorMessages from './error';
 export default function Home() {
   const [url, setUrl] = useState('');
-  const { handleSubmit, error, isLoading } = useSubmitGitUrl();
+  const { handleSubmit, error, isLoading, status } = useSubmitGitUrl();
   const router = useRouter();
 
   const onSubmit = async (e: React.FormEvent) => {
@@ -34,7 +35,7 @@ export default function Home() {
             </button>
           </form>
         </div>
-        {error && <p className='text-red-500'>{error}</p>}
+        {error && <ErrorMessages message={error}/>}
       </div>
     </>
   );

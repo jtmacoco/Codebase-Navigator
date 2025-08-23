@@ -3,6 +3,7 @@ from pathlib import Path
 import tempfile
 import subprocess
 from contextlib import contextmanager
+from errors.errors import InvalidUrl,CloneError
 '''
 Clones a github repository into a tmp directory
 
@@ -22,15 +23,8 @@ def clone_repo(ssh_url: str, repo_name:str):
             subprocess.run(cmd,capture_output=True,text=True,check=True)
             yield tmpdir
 
-            '''
-            methods = self.get_all_methods(tmpdir)
-            method_chunks = self.chunk_code(methods)
-            methods_embed = self.embed_chunks_batching(method_chunks,repo_name)
-            '''
-
         except subprocess.CalledProcessError as e:
-            print(f"CLONE FAILED:{e}")
-            raise
+            raise CloneError
 
 '''
 Parses a url obtaining the ssh_url
@@ -45,6 +39,8 @@ Return:
 def parseUrl(url:str):
     parsed = urlparse(url)
     parts = parsed.path.strip("/").split("/")
+    if len(parts)<2:
+        raise InvalidUrl
     owner,repo = parts[0],parts[1]
     ssh_url= f"git@github.com:{owner}/{repo}.git"
     return ssh_url,repo
