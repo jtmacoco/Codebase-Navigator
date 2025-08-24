@@ -19,13 +19,6 @@ class RAGPipeline:
             history_context = "\n".join([f"User:{u}\n Assistant:{a}" for u, a in self.chat_history])
             user_query = f"Chat History:{history_context}\n User Query:{user_query}"
 
-        start_time = time.perf_counter()
         response = self.generator.generate_response(user_query,data['fine'],data['medium'])
-        end_time = time.perf_counter()
-        elapsed_time = end_time-start_time
-        try:
-            self.add_item_limit((user_query,response),self.chat_history)
-        except Exception as e:
-            print(e)
-        print(f"Elapsed time:{elapsed_time:.6f}seconds")
+        self.add_item_limit((user_query,response),self.chat_history)
         return response
